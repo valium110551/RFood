@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RFood</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="input_meal">發布餐點資訊</string>
+    <string name="get_meal">看看有那些餐點?</string>
+    <string name="action_settings">Settings</string>
+    <string name="meal_name">餐點名稱</string>
+    <string name="meal_number">數量</string>
+    <string name="send">送出</string>
+    <string name="edit">編輯餐點資訊</string>
+
+</resources>
