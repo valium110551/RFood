@@ -21,9 +21,9 @@ import android.widget.EditText;
 
 public class EditProductActivity extends Activity {
 
-	EditText mealName;//txtName;
-	EditText mealNumber;//txtPrice;
-	
+	EditText mealName;// txtName;
+	EditText mealNumber;// txtPrice;
+
 	Button btnSave;
 	Button btnDelete;
 
@@ -40,7 +40,7 @@ public class EditProductActivity extends Activity {
 
 	// url to update product
 	private static final String url_update_product = "http://54.68.92.191/android_connect_rfood/update_product.php";
-	
+
 	// url to delete product
 	private static final String url_delete_product = "http://54.68.92.191/android_connect_rfood/delete_product.php";
 
@@ -50,7 +50,8 @@ public class EditProductActivity extends Activity {
 	private static final String TAG_PID = "pid";
 	private static final String TAG_MEALNAME = "name";
 	private static final String TAG_MEALNUMBER = "number";
-	//private static final String TAG_DESCRIPTION = "description";
+
+	// private static final String TAG_DESCRIPTION = "description";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class EditProductActivity extends Activity {
 
 		// getting product details from intent
 		Intent i = getIntent();
-		
+
 		// getting product id (pid) from intent
 		pid = i.getStringExtra(TAG_PID);
 
@@ -95,7 +96,7 @@ public class EditProductActivity extends Activity {
 	/**
 	 * Background Async Task to Get complete product details
 	 * */
-	class GetProductDetails extends AsyncTask<String, String, String> {
+	class GetProductDetails extends AsyncTask<String, String, JSONObject> {
 
 		/**
 		 * Before starting background thread Show Progress Dialog
@@ -113,72 +114,82 @@ public class EditProductActivity extends Activity {
 		/**
 		 * Getting product details in background thread
 		 * */
-		protected String doInBackground(String... params) {
+		protected JSONObject doInBackground(String... params) {
 
 			// updating UI from Background Thread
-			//runOnUiThread(new Runnable() {
-				//public void run() {
-					// Check for success tag
-					int success;
-					try {
-						// Building Parameters
-						List<NameValuePair> param = new ArrayList<NameValuePair>();
-						param.add(new BasicNameValuePair("pid", pid));
+			// runOnUiThread(new Runnable() {
+			// public void run() {
+			// Check for success tag
+			int success;
+			JSONObject product = null;
+			try {
+				// Building Parameters
+				List<NameValuePair> param = new ArrayList<NameValuePair>();
+				param.add(new BasicNameValuePair("pid", pid));
 
-						// getting product details by making HTTP request
-						// Note that product details url will use GET request
-						JSONObject json = jsonParser.makeHttpRequest(
-								url_product_detials, "GET", param);
+				// getting product details by making HTTP request
+				// Note that product details url will use GET request
+				JSONObject json = jsonParser.makeHttpRequest(
+						url_product_detials, "GET", param);
 
-						// check your log for json response
-						Log.d("Single Product Details", json.toString());
-						
-						// json success tag
-						success = json.getInt(TAG_SUCCESS);
-						if (success == 1) {
-							// successfully received product details
-							JSONArray productObj = json
-									.getJSONArray(TAG_PRODUCT); // JSON Array
-							
-							// get first product object from JSON Array
-							JSONObject product = productObj.getJSONObject(0);
+				// check your log for json response
+				Log.d("Single Product Details", json.toString());
 
-							// product with this pid found
-							// Edit Text
-							mealName = (EditText) findViewById(R.id.inputName);
-							mealNumber = (EditText) findViewById(R.id.inputNumber);
-							//txtDesc = (EditText) findViewById(R.id.inputDesc);
+				// json success tag
+				success = json.getInt(TAG_SUCCESS);
+				if (success == 1) {
+					// successfully received product details
+					JSONArray productObj = json.getJSONArray(TAG_PRODUCT); // JSON
+																			// Array
 
-							// display product data in EditText
-							//mealName.setText(product.getString(TAG_MEALNAME));
-							//mealNumber.setText(product.getString(TAG_MEALNUMBER));
-							//txtDesc.setText(product.getString(TAG_DESCRIPTION));
+					// get first product object from JSON Array
+					product = productObj.getJSONObject(0);
 
-						}else{
-							// product with pid not found
-						}
-					} catch (JSONException e) {
-						Log.e("ff", "here");
-						e.printStackTrace();
-					}
-				//}
-			//});
+					// txtDesc = (EditText) findViewById(R.id.inputDesc);
+					// txtDesc.setText(product.getString(TAG_DESCRIPTION));
+					
 
-			return null;
+				} else {
+					// product with pid not found
+				}
+			} catch (JSONException e) {
+				Log.e("ff", "here");
+				e.printStackTrace();
+			}
+			// }
+			// });
+			return product;
+			
 		}
-
 
 		/**
 		 * After completing background task Dismiss the progress dialog
 		 * **/
-		protected void onPostExecute(String file_url) {
+		protected void onPostExecute(JSONObject product) {
 			// dismiss the dialog once got all details
 			pDialog.dismiss();
+			mealName = (EditText) findViewById(R.id.inputName);
+			mealNumber = (EditText) findViewById(R.id.inputNumber);
+
+			// display product data in EditText
+			try {
+				mealName.setText(product.getString(TAG_MEALNAME));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				mealNumber.setText(product.getString(TAG_MEALNUMBER));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 	}
 
 	/**
-	 * Background Async Task to  Save product Details
+	 * Background Async Task to Save product Details
 	 * */
 	class SaveProductDetails extends AsyncTask<String, String, String> {
 
@@ -203,14 +214,14 @@ public class EditProductActivity extends Activity {
 			// getting updated data from EditTexts
 			String name = mealName.getText().toString();
 			String number = mealNumber.getText().toString();
-			//String description = txtDesc.getText().toString();
+			// String description = txtDesc.getText().toString();
 
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair(TAG_PID, pid));
 			params.add(new BasicNameValuePair(TAG_MEALNAME, name));
 			params.add(new BasicNameValuePair(TAG_MEALNUMBER, number));
-			//params.add(new BasicNameValuePair(TAG_DESCRIPTION, description));
+			// params.add(new BasicNameValuePair(TAG_DESCRIPTION, description));
 
 			// sending modified data through http request
 			// Notice that update product url accepts POST method
@@ -220,7 +231,7 @@ public class EditProductActivity extends Activity {
 			// check json success tag
 			try {
 				int success = json.getInt(TAG_SUCCESS);
-				
+
 				if (success == 1) {
 					// successfully updated
 					Intent i = getIntent();
@@ -237,12 +248,11 @@ public class EditProductActivity extends Activity {
 			return null;
 		}
 
-
 		/**
 		 * After completing background task Dismiss the progress dialog
 		 * **/
 		protected void onPostExecute(String file_url) {
-			// dismiss the dialog once product uupdated
+			// dismiss the dialog once product updated
 			pDialog.dismiss();
 		}
 	}
@@ -283,7 +293,7 @@ public class EditProductActivity extends Activity {
 
 				// check your log for json response
 				Log.d("Delete Product", json.toString());
-				
+
 				// json success tag
 				success = json.getInt(TAG_SUCCESS);
 				if (success == 1) {

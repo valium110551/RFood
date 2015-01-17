@@ -32,7 +32,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class Map_activity extends Activity 
 {
 	private GoogleMap mMap;
-	private Geocoder geoCoder;
 	// Progress Dialog
 	private ProgressDialog pDialog;
 
@@ -59,7 +58,7 @@ public class Map_activity extends Activity
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.activity_map);
 	                
-	        geoCoder = new Geocoder(Map_activity.this);
+	       // geoCoder = new Geocoder(Map_activity.this);
 	        
 	        // Hashmap for ListView
 			productsList = new ArrayList<HashMap<String, String>>();

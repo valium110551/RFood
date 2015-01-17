@@ -155,7 +155,7 @@ public class MealInputActivity extends Activity implements android.location.Loca
 	      
 	        this.locationMgr.requestLocationUpdates(provider, 0, 0, (android.location.LocationListener) this);
 
-	        Location location = this.locationMgr.getLastKnownLocation(provider);//LocationManager.NETWORK_PROVIDER);
+	        Location location = this.locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	        
 	        loclatitude = location.getLatitude();
 	        loclongitude = location.getLongitude();
