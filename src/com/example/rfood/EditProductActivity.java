@@ -90,7 +90,6 @@ public class EditProductActivity extends Activity {
 				new DeleteProduct().execute();
 			}
 		});
-
 	}
 
 	/**
@@ -116,9 +115,6 @@ public class EditProductActivity extends Activity {
 		 * */
 		protected JSONObject doInBackground(String... params) {
 
-			// updating UI from Background Thread
-			// runOnUiThread(new Runnable() {
-			// public void run() {
 			// Check for success tag
 			int success;
 			JSONObject product = null;
@@ -141,25 +137,16 @@ public class EditProductActivity extends Activity {
 					// successfully received product details
 					JSONArray productObj = json.getJSONArray(TAG_PRODUCT); // JSON
 																			// Array
-
 					// get first product object from JSON Array
 					product = productObj.getJSONObject(0);
-
-					// txtDesc = (EditText) findViewById(R.id.inputDesc);
-					// txtDesc.setText(product.getString(TAG_DESCRIPTION));
-					
 
 				} else {
 					// product with pid not found
 				}
 			} catch (JSONException e) {
-				Log.e("ff", "here");
 				e.printStackTrace();
 			}
-			// }
-			// });
 			return product;
-			
 		}
 
 		/**
@@ -168,23 +155,17 @@ public class EditProductActivity extends Activity {
 		protected void onPostExecute(JSONObject product) {
 			// dismiss the dialog once got all details
 			pDialog.dismiss();
+			
 			mealName = (EditText) findViewById(R.id.inputName);
 			mealNumber = (EditText) findViewById(R.id.inputNumber);
 
 			// display product data in EditText
 			try {
 				mealName.setText(product.getString(TAG_MEALNAME));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
 				mealNumber.setText(product.getString(TAG_MEALNUMBER));
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 	}
 
@@ -307,7 +288,6 @@ public class EditProductActivity extends Activity {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-
 			return null;
 		}
 
